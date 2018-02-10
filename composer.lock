@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bdb4d959a34aec175229a9c4571544cc",
+    "content-hash": "9a418ad9d156eda428b1ee576b3accb7",
     "packages": [
         {
             "name": "coderstephen/slack-client",
@@ -2139,6 +2139,44 @@
             "time": "2018-01-21T19:05:02+00:00"
         },
         {
+            "name": "vineyardkoeln/churchtools-api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vineyardkoeln/churchtools-api.git",
+                "reference": "08da93e61ed3a66b8f53fe1a4d0edb998d062468"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vineyardkoeln/churchtools-api/zipball/08da93e61ed3a66b8f53fe1a4d0edb998d062468",
+                "reference": "08da93e61ed3a66b8f53fe1a4d0edb998d062468",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3",
+                "php": ">=7.0.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jörn Wagner",
+                    "email": "joern.wagner@vineyard.koeln"
+                }
+            ],
+            "description": "Object-oriented API access to ChurchTools",
+            "homepage": "https://github.com/vineyardkoeln/churchtools-api",
+            "time": "2018-02-10T21:08:40+00:00"
+        },
+        {
             "name": "zendframework/zend-escaper",
             "version": "2.5.2",
             "source": {
@@ -2644,7 +2682,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "devristo/phpws": 20
+        "devristo/phpws": 20,
+        "vineyardkoeln/churchtools-api": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

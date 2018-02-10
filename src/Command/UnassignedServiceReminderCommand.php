@@ -8,10 +8,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UnassignedServiceReminderCommand extends Command
 {
     private $slackApiToken;
+    private $churchToolsLoginId;
+    private $churchToolsApiToken;
 
-    public function __construct(string $slackApiToken)
+    public function __construct(string $slackApiToken, string $churchToolsLoginId, string $churchToolsApiToken)
     {
         $this->slackApiToken = $slackApiToken;
+        $this->churchToolsLoginId = $churchToolsLoginId;
+        $this->churchToolsApiToken = $churchToolsApiToken;
 
         parent::__construct();
     }
@@ -26,6 +30,9 @@ class UnassignedServiceReminderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $ctApi = \ChurchTools\Api\RestApi::createWithLoginIdToken('vykoeln', $this->churchToolsLoginId, $this->churchToolsApiToken);
+        $eventData = $ctApi->getAllEventData();
+
         $loop = \React\EventLoop\Factory::create();
 
         $client = new \Slack\ApiClient($loop);

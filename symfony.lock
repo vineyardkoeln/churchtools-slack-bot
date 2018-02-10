@@ -140,6 +140,9 @@
     "symfony/yaml": {
         "version": "v3.4.4"
     },
+    "vineyardkoeln/churchtools-api": {
+        "version": "dev-master"
+    },
     "zendframework/zend-escaper": {
         "version": "2.6-dev"
     },

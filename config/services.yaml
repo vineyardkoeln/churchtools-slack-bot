@@ -1,7 +1,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  slackApiToken: "%env(SLACK_API_TOKEN)%"
 
 services:
     # default configuration for services in *this* file
@@ -12,7 +11,9 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
-            $slackApiToken: "%slackApiToken%"
+            $slackApiToken: "%env(SLACK_API_TOKEN)%"
+            $churchToolsLoginId: "%env(CHURCH_TOOLS_LOGIN_ID)%"
+            $churchToolsApiToken: "%env(CHURCH_TOOLS_API_TOKEN)%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

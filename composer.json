@@ -12,7 +12,8 @@
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^3.4",
         "symfony/lts": "^3",
-        "symfony/yaml": "^3.4"
+        "symfony/yaml": "^3.4",
+        "vineyardkoeln/churchtools-api": "dev-master"
     },
     "require-dev": {
         "symfony/dotenv": "^3.4"
