@@ -6,14 +6,13 @@
     "require": {
         "php": "^7.0.8",
         "ext-iconv": "*",
-        "coderstephen/slack-client": "^0.3.0",
-        "devristo/phpws": "dev-master",
+        "mpociot/slack-client": "^1.1",
         "symfony/console": "^3.4",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^3.4",
         "symfony/lts": "^3",
         "symfony/yaml": "^3.4",
-        "vineyardkoeln/churchtools-api": "dev-master"
+        "vineyardkoeln/churchtools-api": "^0.1.0"
     },
     "require-dev": {
         "symfony/dotenv": "^3.4"
