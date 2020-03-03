@@ -1,6 +1,7 @@
 <?php
 namespace App\Command;
 
+use ChurchTools\Api\RestApi;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,7 +32,7 @@ class UnassignedServiceReminderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ctApi = \ChurchTools\Api\RestApi::createWithLoginIdToken('vykoeln', $this->churchToolsLoginId, $this->churchToolsApiToken);
+        $ctApi = RestApi::createWithLoginIdToken('vykoeln', $this->churchToolsLoginId, $this->churchToolsApiToken);
         $masterData = $ctApi->getMasterData();
         $services = $masterData['data']['service'];
 
@@ -53,7 +54,11 @@ class UnassignedServiceReminderCommand extends Command
             ];
             foreach ($event['services'] as $service) {
                 if ($service['zugesagt_yn'] == 0 && $service['valid_yn'] == 1) {
-                    $unassignedService['services'][] = $services[$service['service_id']]['bezeichnung'];
+                    $suffix = '';
+                    if ($service['name']) {
+                        $suffix = ' (vorgeschlagen: ' . $service['name'] . ')';
+                    }
+                    $unassignedService['services'][] = $services[$service['service_id']]['bezeichnung'] . $suffix;
                 }
             }
             $unassignedService['services'] = array_unique($unassignedService['services']);
@@ -70,8 +75,7 @@ class UnassignedServiceReminderCommand extends Command
         $client->setToken($this->slackApiToken);
 
         foreach ($unassignedServices as $unassignedService) {
-//            $client->getGroupByName('spielwiese')
-            $client->getChannelByName('allgemein')
+            $client->getGroupByName('staff')
                 ->then(function (\Slack\Channel $channel) use ($client, $unassignedService) {
                     $messageTemplate = "Folgende Dienste sind für *%s* am *%s* noch unbesetzt:\n%s";
                     $date = (new \DateTime($unassignedService['startdate']))->format('d.m.Y');
