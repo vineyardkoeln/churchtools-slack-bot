@@ -41,6 +41,9 @@
     "psr/simple-cache": {
         "version": "1.0.0"
     },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
+    },
     "react/cache": {
         "version": "v0.4.2"
     },
