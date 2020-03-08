@@ -263,6 +263,12 @@
     "symfony/polyfill-ctype": {
         "version": "v1.8.0"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.14.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.14.0"
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.7.0"
     },
@@ -283,6 +289,12 @@
     },
     "symfony/stopwatch": {
         "version": "v3.4.38"
+    },
+    "symfony/string": {
+        "version": "v5.0.5"
+    },
+    "symfony/translation-contracts": {
+        "version": "v2.0.1"
     },
     "symfony/yaml": {
         "version": "v3.4.4"

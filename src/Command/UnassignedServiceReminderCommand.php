@@ -1,7 +1,9 @@
 <?php
 namespace App\Command;
 
+use ChurchTools\Api\Event;
 use ChurchTools\Api\RestApi;
+use ChurchTools\Api\ServiceEntry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,39 +35,42 @@ class UnassignedServiceReminderCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ctApi = RestApi::createWithLoginIdToken('vykoeln', $this->churchToolsLoginId, $this->churchToolsApiToken);
-        $masterData = $ctApi->getMasterData();
-        $services = $masterData['data']['service'];
+        $masterData = $ctApi->getServiceMasterData();
+        $services = $masterData->getServiceEntries();
 
         $eventData = $ctApi->getAllEventData();
         $unassignedServices = [];
 
         $today = date('Y-m-d');
         $nextWeek = date('Y-m-d', strtotime('+1 week'));
-        foreach ($eventData['data'] as $event) {
-            $startdate = substr($event['startdate'], 0, 10);
+        foreach ($eventData as $event) {
+            /** @var Event $event */
+            $startdate = $event->getStartDate()->format('Y-m-d');
             if ($startdate > $nextWeek || $startdate < $today) {
                 continue;
             }
 
             $unassignedService = [
-                'bezeichnung' => $event['bezeichnung'],
-                'startdate' => $event['startdate'],
+                'bezeichnung' => $event->getTitle(),
+                'startdate' => $event->getStartDate(),
                 'services' => [],
             ];
-            foreach ($event['services'] as $service) {
-                if ($service['zugesagt_yn'] == 0 && $service['valid_yn'] == 1) {
+            foreach ($event->getServiceEntries() as $service) {
+                /** @var ServiceEntry $service */
+                if (!$service->hasAccepted() && $service->isValid()) {
                     $suffix = '';
-                    if ($service['name']) {
-                        $suffix = ' (vorgeschlagen: ' . $service['name'] . ')';
+                    if ($service->getName()) {
+                        $suffix = ' (vorgeschlagen: ' . $service->getName() . ')';
                     }
-                    $unassignedService['services'][] = $services[$service['service_id']]['bezeichnung'] . $suffix;
+                    $serviceDefinition = $services->getService($service->getServiceID());
+                    $unassignedService['services'][] = $serviceDefinition->getTitle() . $suffix;
                 }
             }
             $unassignedService['services'] = array_unique($unassignedService['services']);
 
             if (count($unassignedService['services']) > 0) {
                 sort($unassignedService['services']);
-                $unassignedServices[$event['id']] = $unassignedService;
+                $unassignedServices[$event->getID()] = $unassignedService;
             }
         }
 
@@ -78,7 +83,7 @@ class UnassignedServiceReminderCommand extends Command
             $client->getGroupByName('staff')
                 ->then(function (\Slack\Channel $channel) use ($client, $unassignedService) {
                     $messageTemplate = "Folgende Dienste sind für *%s* am *%s* noch unbesetzt:\n%s";
-                    $date = (new \DateTime($unassignedService['startdate']))->format('d.m.Y');
+                    $date = $unassignedService['startdate']->format('d.m.Y');
                     $servicesText = '• ' . implode("\n• ", $unassignedService['services']);
 
                     $attachment = new Attachment('', '', 'Schau in ChurchTools nach für mehr Infos');
